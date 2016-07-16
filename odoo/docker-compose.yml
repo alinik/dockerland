@@ -1,0 +1,24 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    volumes:
+      - "./.data/db:/var/lib/postgresql/data"
+    restart: always
+    environment:
+      POSTGRES_USER: odoo 
+      POSTGRES_PASSWORD: odoo
+     
+  odoo:
+    depends_on:
+      - db
+    image: odoo:8
+    links:
+      - db:db
+    ports:
+      - "8069:8069"
+    restart: always
+    command: openerp-server --db_host db --db_port 5432 -r odoo -w odoo
+    volumes: 
+      - "./.data/odoo:/var/lib/odoo"
+      - "./extra:/mnt/extra-addons"
